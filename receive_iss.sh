@@ -42,6 +42,10 @@ if [ -f "$NOAA_HOME/demod.py" ]; then
         /usr/bin/convert -thumbnail 300 "${NOAA_OUTPUT}/images/${3}-0.png" "${NOAA_OUTPUT}/images/thumb/${3}-0.png"
         sqlite3 "$NOAA_HOME/panel.db" "insert into decoded_passes (pass_start, file_path, daylight_pass, sat_type, img_count) values ($5,\"$3\",1,2,$img_count);"
         pass_id=$(sqlite3 "$NOAA_HOME/panel.db" "select id from decoded_passes order by id desc limit 1;")
+
+# add bad image filtration in due course
+mpack -s "${3}-$i-ISS" ${NOAA_OUTPUT}/images/${3}-0.png wrx.o0gnwd@zapiermail.com
+
         if [ -n "$CONSUMER_KEY" ]; then
             log "Posting to Twitter" "INFO"
             if [ "$img_count" -eq 1 ]; then

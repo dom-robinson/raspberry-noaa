@@ -82,6 +82,9 @@ if [ -f "${METEOR_OUTPUT}/${3}.dec" ]; then
     rm "${METEOR_OUTPUT}/${3}.bmp"
     rm "${METEOR_OUTPUT}/${3}.dec"
 
+	# needs some filtration for bad images in due course
+	mpack -s ${3}-$i ${NOAA_OUTPUT}/images/${3}-122-rectified.jpg wrx.o0gnwd@zapiermail.com
+
     sqlite3 /home/pi/raspberry-noaa/panel.db "insert into decoded_passes (pass_start, file_path, daylight_pass, sat_type) values ($5,\"$3\", 1,0);"
     pass_id=$(sqlite3 /home/pi/raspberry-noaa/panel.db "select id from decoded_passes order by id desc limit 1;")
     if [ -n "$CONSUMER_KEY" ]; then
