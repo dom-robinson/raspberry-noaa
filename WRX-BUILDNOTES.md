@@ -3,8 +3,8 @@
 #To enable mail sending follow this: https://doc.ubuntu-fr.org/msmtp
 
 sudo apt install msmtp msmtp-mta
-
 sudo nano ~/.msmtprc
+
 
 #---- DON'T FORGET TO SET PASSWD and (if using zapier) the zapier email target (or any other email target)
 
@@ -33,7 +33,7 @@ chown pi:pi .msmtprc
 chmod 400 .msmtprc
 
 
-----
+#----
 
 #then use
 
@@ -53,5 +53,10 @@ mpack -s ${3}-$i ${NOAA_OUTPUT}/images/${3}-$i.jpg wrx.XXXX@zapiermail.com
 #Also the satvis integration has its URLs hard coded (using the already-present $pass[ 'sat_name' ] where required)
 
 
----
+#---
+#I have merged in the METEORM2 decoding from this excellent tutorial (https://www.instructables.com/Raspberry-Pi-NOAA-and-Meteor-M-2-Receiver/) that i had previously had both good success with and also consistently received better images than the default setup in raspberry-noaa.
 
+#To make this work you need to add gnuradio
+
+sudo apt install gnuradio
+sudo apt install gr-osmosdr
