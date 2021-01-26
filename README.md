@@ -1,3 +1,7 @@
+# NOTE THAT THIS IS A BRANCH CUSTOMISED FOR PERSONAL USE
+# All modifications follow the original code licensing from the base source at https://github.com/reynico/raspberry-noaa
+
+
 ![Raspberry NOAA](header_1600.png)
 
 # NOAA and Meteor automated capture using Raspberry PI
