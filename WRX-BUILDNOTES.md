@@ -1,13 +1,16 @@
 # BUILD NOTES FOR MY LOCAL SYSTEM
 
-#To enable mail sending follow this: https://doc.ubuntu-fr.org/msmtp
+*To enable mail sending follow this: https://doc.ubuntu-fr.org/msmtp*
 
-```sudo apt install msmtp msmtp-mta
-sudo nano ~/.msmtprc```
+``` bash
+sudo apt install msmtp msmtp-mta
+sudo nano ~/.msmtprc
+```
 
-
-# ---- DON'T FORGET TO SET PASSWD and (if using zapier) the zapier email target (or any other email target)
-
+*Copy, Paste and Edit the content of ~/.msmtprc with nano etc.*
+*DON'T FORGET TO SET PASSWD and (if using zapier) the zapier email target (or any other email target)*
+--- snip ---
+```
 #Set default values for all following accounts.
 defaults
 auth           on
@@ -27,51 +30,55 @@ password       XXXXXXXXXXX
 #Set a default account
 account default : gmail
 
-#-----
-
-#now change the permission on the file:
-
-```chown pi:pi .msmtprc 
-chmod 400 .msmtprc```
-
-
-#----
-
-#then use
-
-mpack -s ${3}-$i ${NOAA_OUTPUT}/images/${3}-$i.jpg wrx.XXXX@zapiermail.com
-
-#to feed to zapier and forward to whatever service.
-
-#note that I have added in this line to the various receive...sh scripts next to where the twitter settings are. 
-#For anyone pulling this then you may want to move the variables around email settings / server and pwds to a config file.
-
-#a note on satvis integration
-#I have reverse engineered the query to satvis.space as best i can.
-##- tags is essential BUT brings in ALL weather satellites.
-##- this is why i added the hot-link urls to the pass list - this allows you to instantly follow the 'next' satellite
-##- satvis provides a huge amount of fun data to explore between passes :)
-
-#Also the satvis integration has its URLs hard coded (using the already-present $pass[ 'sat_name' ] where required)
-
-
-# ---
-# Merging in the optimal M2 decode
-#I have merged in the METEORM2 decoding from this excellent tutorial (https://www.instructables.com/Raspberry-Pi-NOAA-and-Meteor-M-2-Receiver/) that i had previously had both good success with and also consistently received better images than the default setup in raspberry-noaa.
-
-#To make this work you need to add gnuradio
-
-```sudo apt install gnuradio
-sudo apt install gr-osmosdr```
-
-#---
-# Managing the DB
-There were numerous bad images that i wanted to clear out of the system. 
-
-```sqlite3 panel.db ```
-
-brings up the sqlite command prompt: use as follows 
+--- snip ---
 ```
+
+*now change the permission on the file*
+
+``` bash
+chown pi:pi .msmtprc 
+chmod 400 .msmtprc
+```
+
+*then use the following in the scripts to feed to zapier and forward to whatever service.*
+
+``` bash
+mpack -s ${3}-$i ${NOAA_OUTPUT}/images/${3}-$i.jpg wrx.XXXX@zapiermail.com
+```
+
+*note that I have added in this line to the various receive...sh scripts next to where the twitter settings are.* 
+*For anyone pulling this then you may want to move the variables around email settings / server and pwds to a config file.*
+
+# A note on satvis integration
+*I have reverse engineered the query to satvis.space as best i can:* 
+
+* "tags=" is essential BUT brings in ALL weather satellites.
+* this is why i added the hot-link urls to the pass list - this allows you to instantly follow the 'next' satellite
+* satvis provides a huge amount of fun data to explore between passes :) Use its own gui to filter and predict etc.
+
+*Also the satvis integration has its URLs hard coded (using the already-present $pass[ 'sat_name' ] where required)*
+*This might be better passed in from config < **TODO** *
+
+# Merging in the optimal M2 decode
+*I have merged in the METEORM2 decoding from this excellent tutorial (https://www.instructables.com/Raspberry-Pi-NOAA-and-Meteor-M-2-Receiver/) that i had previously had both good success with and also consistently received better images than the default setup in raspberry-noaa.*
+
+*To make this work you need to add gnuradio*
+
+``` bash
+sudo apt install gnuradio
+sudo apt install gr-osmosdr
+```
+
+# Managing the DB
+*There were numerous bad images that i wanted to clear out of the system.*
+
+``` sql
+sqlite3 panel.db 
+```
+
+*brings up the sqlite command prompt: use as follows:* 
+
+``` sql
 sqlite> .databases
 main: /home/pi/raspberry-noaa/panel.db
 sqlite> SELECT * FROM decoded_passes;
@@ -90,12 +97,6 @@ sqlite> SELECT * FROM decoded_passes;
 
 sqlite> DELETE FROM decoded_passes WHERE ID=36;
 sqlite> .quit
-
 ```
 
-Note there is also 'prune.py' which will remove the oldest 10 images from the system: this can be automated but for now I am not doing this until Disc is at around 70%.
-
-# ---- 
-
-
-
+*Note there is also 'prune.py' which will remove the oldest 10 images from the system: this can be automated but for now I am not doing this until Disc is at around 70%.*
