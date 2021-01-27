@@ -44,7 +44,7 @@ fi
 
 log "Starting rtl_fm record" "INFO"
 #timeout "${6}" /usr/local/bin/rtl_fm ${BIAS_TEE} -M raw -f "${2}"M -s 288k -g $GAIN | sox -t raw -r 288k -c 2 -b 16 -e s - -t wav "${RAMFS_AUDIO}/audio/${3}.wav" rate 96k
-timeout "${6}" python3 rtlsdr_m2_lrpt_rx.py $1 $2 $3
+timeout "${6}" python rtlsdr_m2_lrpt_rx.py $1 $2 $3 $3
 
 NOW=$(date +%m-%d-%Y)
 
