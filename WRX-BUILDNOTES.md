@@ -9,7 +9,7 @@ sudo nano ~/.msmtprc
 
 *Copy, Paste and Edit the content of ~/.msmtprc with nano etc.*
 *DON'T FORGET TO SET PASSWD and (if using zapier) the zapier email target (or any other email target)*
---- snip ---
+*--- snip ---
 ```
 #Set default values for all following accounts.
 defaults
@@ -30,8 +30,8 @@ password       XXXXXXXXXXX
 #Set a default account
 account default : gmail
 
---- snip ---
 ```
+*--- snip ---
 
 *now change the permission on the file*
 
