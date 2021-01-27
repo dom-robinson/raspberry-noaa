@@ -1,6 +1,6 @@
 # BUILD NOTES FOR MY LOCAL SYSTEM
 
-# To enable mail sending follow this: https://doc.ubuntu-fr.org/msmtp
+#To enable mail sending follow this: https://doc.ubuntu-fr.org/msmtp
 
 ```sudo apt install msmtp msmtp-mta
 sudo nano ~/.msmtprc```
