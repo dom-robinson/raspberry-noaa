@@ -15,7 +15,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" type="text/css" href="style.css">
-  <title><?= isset($PageTitle) ? $PageTitle : "Raspberry-NOAA - WRXSEUK Fork"?></title>
+  <title><?= isset($PageTitle) ? $PageTitle : "wrx.liveencode.com"?></title>
 </head>
 <body>
 
@@ -24,6 +24,6 @@
   <a class="<?php if($page == 'main.php' || $page == 'detail.php'){ echo ' active"';}?>" target="_self" href="main.php"><?php echo $lang['images']; ?></a>
 </div>
 
-<iframe name="body" srcdoc="<div class='container'>" width="100%" style="border:none;"> </iframe>
+<!--<iframe name="body" srcdoc="<div class='container'>" width="100%" style="border:none;"> </iframe>-->
 
 

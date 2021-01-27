@@ -1,5 +1,5 @@
 <div style="overflow-x:auto;">
-<table id="passes">
+<table id="passes" style="background: white !important;">
   <tr>
     <th><?php echo $lang['satellite']; ?></th>
     <th><?php echo $lang['pass_start']; ?></th>
@@ -9,7 +9,7 @@
   <?php
     foreach ($passes as $pass) {
       if ($pass['is_active'] == false) {
-        echo "<tr class='inactive'>";
+        echo "<tr class='inactive' style='background: lightcoral;'>";
       } else {
         echo "<tr>";
       }
