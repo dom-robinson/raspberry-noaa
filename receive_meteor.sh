@@ -80,10 +80,14 @@ if [ -f "${3}_0.bmp" ]; then
         #add raspberry-noaa formats
 	convert "${3}.jpg" -channel rgb -normalize -undercolor black -fill yellow -pointsize 60 -annotate +20+60 "${1} ${START_DATE} Elev: $7°" "${NOAA_OUTPUT}/images/${3}-122-rectified.jpg"
     	convert -thumbnail 300 "${3}.jpg" "${NOAA_OUTPUT}/images/thumb/${3}-122-rectified.jpg"
-    
+        convert "${3}_ir.jpg" -channel rgb -normalize -undercolor black -fill yellow -pointsize 60 -annotate +20+60 "${1} ${START_DATE} Elev: $7°" "${NOAA_OUTPUT}/images/${3}-122-rectified_ir.jpg"
+        convert -thumbnail 300 "${3}_ir.jpg" "${NOAA_OUTPUT}/images/thumb/${3}-122-rectified_ir.jpg"
 
-	# Send to email / facebook page: needs some filtration for bad images in due course
-	mpack -s ${3}-$i ${NOAA_OUTPUT}/images/${3}-122-rectified.jpg wrx.o0gnwd@zapiermail.com
+
+    	# Send to email / facebook page: needs some filtration for bad images in due course
+        mpack -s ${3}-${7}-"InfraRed" ${NOAA_OUTPUT}/images/${3}-122-rectified_ir.jpg wrx.o0gnwd@zapiermail.com
+	mpack -s ${3}-${7} ${NOAA_OUTPUT}/images/${3}-122-rectified.jpg wrx.o0gnwd@zapiermail.com
+
 
 	#update db / passes list etc
 	sqlite3 /home/pi/raspberry-noaa/panel.db "insert into decoded_passes (pass_start, file_path, daylight_pass, sat_type) values ($5,\"$3\", 1,0);"
@@ -96,5 +100,6 @@ fi
 
 
 #tidyup todo
-mkdir -p /home/pi/raspberry-noaa/meteortodel/${NOW}
-mv ${3}* ./meteortodel/${NOW}
+#mkdir -p /home/pi/raspberry-noaa/meteortodel/${NOW}
+#mv ${3}* ./meteortodel/${NOW}
+rm ${3}*

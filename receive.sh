@@ -70,7 +70,9 @@ if [ -n "$CONSUMER_KEY" ]; then
 fi
 
 #add some checking in here in due course.
-mpack -s ${3}-$i ${NOAA_OUTPUT}/images/${3}-$i.jpg wrx.o0gnwd@zapiermail.com
+for i in $ENHANCEMENTS; do
+	mpack -s ${3}-$i ${NOAA_OUTPUT}/images/${3}-$i.jpg wrx.o0gnwd@zapiermail.com
+done
 
 sqlite3 /home/pi/raspberry-noaa/panel.db "update predict_passes set is_active = 0 where (predict_passes.pass_start) in (select predict_passes.pass_start from predict_passes inner join decoded_passes on predict_passes.pass_start = decoded_passes.pass_start where decoded_passes.id = $pass_id);"
 

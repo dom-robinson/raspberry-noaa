@@ -52,7 +52,7 @@
       $pass = $result->fetchArray();
       switch($pass['sat_type']) {
         case 0: // Meteor-M2
-          $enhacements = ['-122-rectified.jpg'];
+          $enhacements = ['-122-rectified.jpg','-122-rectified_ir.jpg'];
           break;
         case 1: // NOAA
           if ($pass['daylight_pass'] == 1) {
