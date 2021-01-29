@@ -5,6 +5,9 @@
 
 . "$HOME/.noaa.conf"
 
+## current date and folder structure
+START_DATE=$(date '+%d-%m-%Y %H:%M')
+
 declare -A levels=([DEBUG]=0 [INFO]=1 [WARN]=2 [ERROR]=3)
 log_level=${LOG_LEVEL}
 
@@ -20,11 +23,9 @@ log() {
     (( ${levels[$log_priority]} < ${levels[$log_level]} )) && return 2
 
     #log here
-    echo "${log_priority} : ${log_message}"
+    echo "$START_DATE	${log_priority} : ${log_message}" >> /home/pi/wrxlog.log
 }
 
-## current date and folder structure
-START_DATE=$(date '+%d-%m-%Y %H:%M')
 
 ## sane checks
 if [ ! -d "${NOAA_HOME}" ]; then
