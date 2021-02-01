@@ -52,7 +52,7 @@ class top_block(gr.top_block):
         self.rtlsdr_source_0.set_dc_offset_mode(0, 0)
         self.rtlsdr_source_0.set_iq_balance_mode(0, 0)
         self.rtlsdr_source_0.set_gain_mode(False, 0)
-        self.rtlsdr_source_0.set_gain(32.8, 0)
+        self.rtlsdr_source_0.set_gain(38.2, 0)
         self.rtlsdr_source_0.set_if_gain(0, 0)
         self.rtlsdr_source_0.set_bb_gain(0, 0)
         self.rtlsdr_source_0.set_antenna('', 0)

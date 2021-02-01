@@ -1,5 +1,5 @@
 <div style="overflow-x:auto;">
-<table id="passes" style="background: white !important;">
+<table id="passes" style="background: white !important;" >
   <tr>
     <th><?php echo $lang['satellite']; ?></th>
     <th><?php echo $lang['pass_start']; ?></th>

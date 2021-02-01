@@ -11,6 +11,7 @@ fi
 . "$HOME/.tweepy.conf"
 . "$NOAA_HOME/common.sh"
 
+log "NOAA receive.sh" "INFO"
 
 ## pass start timestamp and sun elevation
 PASS_START=$(expr "$5" + 90)
@@ -52,6 +53,7 @@ done
 
 rm "${NOAA_HOME}/map/${3}-map.png"
 
+log "Updating DB" "INFO"
 if [ "${SUN_ELEV}" -gt "${SUN_MIN_ELEV}" ]; then
 	sqlite3 /home/pi/raspberry-noaa/panel.db "insert into decoded_passes (pass_start, file_path, daylight_pass, sat_type) values ($5,\"$3\", 1,1);"
 else
@@ -59,23 +61,15 @@ else
 fi
 
 pass_id=$(sqlite3 /home/pi/raspberry-noaa/panel.db "select id from decoded_passes order by id desc limit 1;")
-
-if [ -n "$CONSUMER_KEY" ]; then
-	log "Posting to Twitter" "INFO"
-	if [ "${SUN_ELEV}" -gt "${SUN_MIN_ELEV}" ]; then
-		python3 "${NOAA_HOME}/post.py" "$1 ${START_DATE} Mas imagenes: https://weather.reyni.co/detail.php?id=$pass_id" "$7" "${NOAA_OUTPUT}/images/$3-MCIR-precip.jpg" "${NOAA_OUTPUT}/images/$3-MSA-precip.jpg" "${NOAA_OUTPUT}/images/$3-HVC-precip.jpg" "${NOAA_OUTPUT}/images/$3-HVCT-precip.jpg"
-	else
-		python3 "${NOAA_HOME}/post.py" "$1 ${START_DATE} Mas imagenes: https://weather.reyni.co/detail.php?id=$pass_id" "$7" "${NOAA_OUTPUT}/images/$3-MCIR-precip.jpg" "${NOAA_OUTPUT}/images/$3-MCIR.jpg"
-	fi
-fi
-
-#add some checking in here in due course.
-for i in $ENHANCEMENTS; do
-	mpack -s ${3}-$i ${NOAA_OUTPUT}/images/${3}-$i.jpg wrx.o0gnwd@zapiermail.com
-done
-
 sqlite3 /home/pi/raspberry-noaa/panel.db "update predict_passes set is_active = 0 where (predict_passes.pass_start) in (select predict_passes.pass_start from predict_passes inner join decoded_passes on predict_passes.pass_start = decoded_passes.pass_start where decoded_passes.id = $pass_id);"
 
+log "EMAIL forwarding to services" "INFO"
+#add some checking in here in due course. 
+for i in $ENHANCEMENTS; do
+         mpack -s ${3}-$i ${NOAA_OUTPUT}/images/${3}-$i.jpg wrx.o0gnwd@zapiermail.com 
+done
+
+log "Tidy up" "INFO"
 if [ "$DELETE_AUDIO" = true ]; then
 	log "Deleting audio files" "INFO"
   rm "${RAMFS_AUDIO}/audio/${3}.wav"
@@ -83,3 +77,4 @@ else
 	log "Moving audio files out to the SD card" "INFO"
   mv "${RAMFS_AUDIO}/audio/${3}.wav" "${NOAA_OUTPUT}/audio/${3}.wav"
 fi
+log "NOAA Capture Complete" "INFO"

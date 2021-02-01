@@ -21,9 +21,9 @@ log() {
 
     #check if level is enough
     (( ${levels[$log_priority]} < ${levels[$log_level]} )) && return 2
-
+    LOG_TIME=$(date '+%d-%m-%Y %H:%M:%S')
     #log here
-    echo "$START_DATE	${log_priority} : ${log_message}" >> /home/pi/wrxlog.log
+    echo "$LOG_TIME	${log_priority} : ${log_message}" >> /home/pi/raspberry-noaa/wrxlog.log
 }
 
 

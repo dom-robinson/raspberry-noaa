@@ -24,10 +24,6 @@ log_running() {
     echo " ${YELLOW}*${RESET} $1"
 }
 
-log_error() {
-    echo " ${RED}error: $1${RESET}"
-}
-
 success() {
     echo "${GREEN}$1${RESET}"
 }
@@ -39,7 +35,7 @@ fi
 
 ### Verify cloned repo
 if [ ! -e "$HOME/raspberry-noaa" ]; then
-    die "Is https://github.com/reynico/raspberry-noaa cloned in your home directory?"
+        die "Is https://github.com/reynico/raspberry-noaa cloned in your home directory?"
 fi
 
 ### Install required packages
@@ -66,6 +62,7 @@ sudo apt install -yq predict \
                      libncursesw5-dev \
                      libatlas-base-dev \
                      python3-pip \
+		     python \
                      imagemagick \
                      libxft-dev \
                      libxft2 \
@@ -74,7 +71,9 @@ sudo apt install -yq predict \
                      socat \
                      php7.2-fpm \
                      php7.2-sqlite \
-                     sqlite3
+                     sqlite3 \
+		     gnuradio \
+		     gr-osmosdr
 
 if [ "$raspbian_version" == "stretch" ]; then
     sudo apt install -yq libgfortran-5-dev
@@ -82,7 +81,7 @@ else
     sudo apt install -yq libgfortran5
 fi
 
-sudo python3 -m pip install numpy ephem tweepy Pillow
+sudo pip3 install numpy ephem tweepy Pillow
 log_done "Packages installed"
 
 ### Create the database schema
@@ -237,7 +236,7 @@ else
         cd /tmp
         unzip master.zip
         cd pd120_decoder-master/pd120_decoder/
-        python3 -m pip install --user -r requirements.txt
+        pip3 install --user -r requirements.txt
         cp demod.py utils.py "$HOME/raspberry-noaa/"
     )
     log_done "pd120_decoder installed"
@@ -255,53 +254,24 @@ else
 fi
 
 echo "
-    Next we'll configure your webpanel language
-    and locale settings - you can update these in the
-    future by modifying 'lang' in /var/www/wx/Config.php
-    and 'date_default_timezone_set' in /var/www/wx/header.php
-    "
-
-# language configuration
-langs=($(find templates/webpanel/language/ -type f -printf "%f\n" | cut -f 1 -d '.'))
-while : ; do
-    read -rp "Enter your preferred language (${langs[*]}): "
-    lang=$REPLY
-
-    if [[ ! " ${langs[@]} " =~ " ${lang} " ]]; then
-        log_error "choice $lang is not one of the available options (${langs[*]})"
-    else
-        break
-    fi
-done
-sed -i -e "s/'lang' => '.*'$/'lang' => '${lang}'/" "/var/www/wx/Config.php"
-
-echo "Visit https://www.php.net/manual/en/timezones.php for a list of available timezones"
-read -rp "Enter your preferred timezone: "
-    timezone=$REPLY
-timezone=$(echo $timezone | sed 's/\//\\\//g')
-sed -i -e "s/date_default_timezone_set('.*');/date_default_timezone_set('${timezone}');/" "/var/www/wx/header.php"
-
-echo "
     It's time to configure your ground station
     You'll be asked for your latitude and longitude
     Use negative values for South and West
     "
 
 read -rp "Enter your latitude (South values are negative): "
-    lat=$REPLY
+        lat=$REPLY
 
 read -rp "Enter your longitude (West values are negative): "
-    lon=$REPLY
+        lon=$REPLY
 
-# note: this can probably be improved by calculating this
-# automatically - good for a future iteration
-read -rp "Enter your timezone offset (ex: -3 for Argentina time): "
-    tzoffset=$REPLY
+read -rp "Enter your timezone (Eg: -3 for Argentina time): "
+        timezone=$REPLY
 
 sed -i -e "s/change_latitude/${lat}/g;s/change_longitude/${lon}/g" "$HOME/.noaa.conf"
 sed -i -e "s/change_latitude/${lat}/g;s/change_longitude/${lon}/g" "$HOME/.wxtoimgrc"
 sed -i -e "s/change_latitude/${lat}/g;s/change_longitude/$(echo  "$lon * -1" | bc)/g" "$HOME/.predict/predict.qth"
-sed -i -e "s/change_latitude/${lat}/g;s/change_longitude/${lon}/g;s/change_tz/$(echo  "$tzoffset * -1" | bc)/g" "sun.py"
+sed -i -e "s/change_latitude/${lat}/g;s/change_longitude/${lon}/g;s/change_tz/$(echo  "$timezone * -1" | bc)/g" "sun.py"
 
 success "Install done! Double check your $HOME/.noaa.conf settings"
 

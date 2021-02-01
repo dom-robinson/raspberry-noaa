@@ -24,6 +24,7 @@
   <a class="<?php if($page == 'main.php' || $page == 'detail.php'){ echo ' active"';}?>" target="_self" href="main.php"><?php echo $lang['images']; ?></a>
 </div>
 
+<div class="container">
 <!--<iframe name="body" srcdoc="<div class='container'>" width="100%" style="border:none;"> </iframe>-->
 
 
