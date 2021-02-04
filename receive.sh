@@ -65,8 +65,11 @@ sqlite3 /home/pi/raspberry-noaa/panel.db "update predict_passes set is_active = 
 
 log "EMAIL forwarding to services" "INFO"
 #add some checking in here in due course. 
-for i in $ENHANCEMENTS; do
-         mpack -s ${3}-$i ${NOAA_OUTPUT}/images/${3}-$i.jpg wrx.o0gnwd@zapiermail.com 
+for i in $ENHANCEMENTS; do 
+
+if [ -f "${NOAA_OUTPUT}/images/${3}-$i.jpg" ]; then 
+         mpack -s ${3}-$i ${NOAA_OUTPUT}/images/${3}-$i.jpg trigger@applet.ifttt.com
+fi
 done
 
 log "Tidy up" "INFO"

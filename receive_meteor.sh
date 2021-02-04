@@ -85,8 +85,12 @@ if [ -f "${3}_0.bmp" ]; then
 
 	log "Emailing to facebook forwarder" "INFO"
     	# Send to email / facebook page: needs some filtration for bad images in due course
-        mpack -s ${3}-${7}-"InfraRed" ${NOAA_OUTPUT}/images/${3}-122-rectified_ir.jpg wrx.o0gnwd@zapiermail.com
-	mpack -s ${3}-${7} ${NOAA_OUTPUT}/images/${3}-122-rectified.jpg wrx.o0gnwd@zapiermail.com
+	if [ -f "${NOAA_OUTPUT}/images/${3}-122-rectified_ir.jpg" ]; then 
+        	mpack -s ${3}-${7}-"InfraRed" ${NOAA_OUTPUT}/images/${3}-122-rectified_ir.jpg trigger@applet.ifttt.com
+	fi
+	if [ -f "${NOAA_OUTPUT}/images/${3}-122-rectified.jpg" ]; then 
+		mpack -s ${3}-${7} ${NOAA_OUTPUT}/images/${3}-122-rectified.jpg trigger@applet.ifttt.com
+	fi
 
 	log "Updating DB" "INFO"
 	#update db / passes list etc
