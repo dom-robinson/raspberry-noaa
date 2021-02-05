@@ -64,13 +64,20 @@ pass_id=$(sqlite3 /home/pi/raspberry-noaa/panel.db "select id from decoded_passe
 sqlite3 /home/pi/raspberry-noaa/panel.db "update predict_passes set is_active = 0 where (predict_passes.pass_start) in (select predict_passes.pass_start from predict_passes inner join decoded_passes on predict_passes.pass_start = decoded_passes.pass_start where decoded_passes.id = $pass_id);"
 
 log "EMAIL forwarding to services" "INFO"
-#add some checking in here in due course. 
+
+#checking added - wont email images under 2000 bytes for default. These images are typically nulls. 
+minsize=2000
 for i in $ENHANCEMENTS; do 
 
-if [ -f "${NOAA_OUTPUT}/images/${3}-$i.jpg" ]; then 
-         mpack -s ${3}-$i ${NOAA_OUTPUT}/images/${3}-$i.jpg trigger@applet.ifttt.com
-fi
+	filesize=$(stat -c%s "${NOAA_OUTPUT}/images/${3}-$i.jpg")
+
+	if (( filesize > minsize )); then
+		         mpack -s ${3}-$i ${NOAA_OUTPUT}/images/${3}-$i.jpg trigger@applet.ifttt.com
+		         log "${3}-$i.jpg sent" "INFO"
+	fi
+
 done
+
 
 log "Tidy up" "INFO"
 if [ "$DELETE_AUDIO" = true ]; then
